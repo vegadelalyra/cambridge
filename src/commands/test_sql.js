@@ -30,7 +30,7 @@ do {
         'Test n°', n + 1, 
         'Elapsed time: ', elapsedTime, 'ms'
     ); avg.push(elapsedTime); n++
-    if (n == 1000) return
+    if (n == 1000) break
 } while ( cap == '!' || n < cap )
 
 endOfTest()
