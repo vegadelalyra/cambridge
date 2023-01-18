@@ -6,4 +6,3 @@ yargs(process.argv.slice(2))
 .command('$0', 'Search your word in Cambridge', ()=> {}, () => import('./src/commands/default.js'))
 .command('test', 'Test the speed of 10 scrapes', () => {}, () => import('./src/commands/test.js'))
 .argv
-// .command('concurrent', '10 tests at the same time', () => {}, () => import('./src/commands/test.js'))

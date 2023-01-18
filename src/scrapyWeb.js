@@ -34,7 +34,7 @@ export default async function webScrape(userInput) {
     }
 
     // scrape the shortest definition & example of the word
-    CEFR = lvl == '' ? '.ddef_block' : `.ddef_block:has(.${lvl})` 
+    CEFR = lvl == '' ? '.ddef_block:has(.db)' : `.ddef_block:has(.${lvl})` 
     const leveled_blocks = await page.$$eval(CEFR, blocks => {
         let shortest_def = blocks.reduce((a, b) => {
             return a.querySelector('.db').textContent.split(' ').length <= 
@@ -52,7 +52,7 @@ export default async function webScrape(userInput) {
         
         return shortest_def = {
             def : shortest_def.querySelector('.db').textContent,
-            exp : shortest_exp.textContent || ''
+            exp : shortest_exp?.textContent || ''
         }
     })
 
@@ -68,6 +68,5 @@ export default async function webScrape(userInput) {
         exp: leveled_blocks.exp.at(-1) == '.' 
         ? leveled_blocks.exp.trim().slice(0, -1)
         : leveled_blocks.exp.trim()
-    }; page.close() 
-    return console.log(cambridge)
+    }; return console.log(cambridge)
 }

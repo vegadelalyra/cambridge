@@ -1,6 +1,6 @@
 import webScrape from "../scrapyWeb.js"
 
-// Time testing
+// User input handler
 let userInput = process.argv.slice(2)[0]
 if (!userInput) userInput = await import('./userInput.js').then(d => d.default())
 if (!/^[a-zA-Z]+$/.test(userInput)) {
@@ -8,6 +8,7 @@ if (!/^[a-zA-Z]+$/.test(userInput)) {
     process.exit()
 }
 
+// Time testing
 const start = performance.now()
 // Your code goes here
 await webScrape(userInput)
