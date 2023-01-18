@@ -17,7 +17,7 @@ export default async function webScrape(userInput) {
     await page.goto(
         `https://dictionary.cambridge.org/dictionary/english/${userInput}`, 
         { waitUntil: 'domcontentloaded' }
-    ); browser.close(); let wrd 
+    ); let wrd 
     
     try { wrd = await page.$eval('.dhw', wrd => wrd.textContent) }
     catch { 
@@ -68,5 +68,6 @@ export default async function webScrape(userInput) {
         exp: leveled_blocks.exp.at(-1) == '.' 
         ? leveled_blocks.exp.trim().slice(0, -1)
         : leveled_blocks.exp.trim()
-    }; return console.log(cambridge)
+    }; await browser.close() 
+    return console.log(cambridge)
 }

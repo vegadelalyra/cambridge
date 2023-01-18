@@ -22,15 +22,15 @@ process.on('SIGINT', endOfTest)
 
 do {
     const start = performance.now()
-
-    // Your code goes here
     await webScrape(userInput)
-
     const end = performance.now()
     
     const elapsedTime = end - start
-    console.log('Test n°', n + 1, 'Elapsed time: ', elapsedTime, 'ms')
-    avg.push(elapsedTime); n++
-} while ( cap == '!' || n < cap)
+    console.log(
+        'Test n°', n + 1, 
+        'Elapsed time: ', elapsedTime, 'ms'
+    ); avg.push(elapsedTime); n++
+    if (n == 1000) return
+} while ( cap == '!' || n < cap )
 
 endOfTest()

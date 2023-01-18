@@ -5,7 +5,5 @@ yargs(process.argv.slice(2))
 .usage('\nLook up the most advanced definition of a word in the Cambridge dictionary.')
 .command('$0', 'Search your word in Cambridge', ()=> {}, () => import('./src/commands/default.js'))
 .command('sequentially', 'Test the speed of n scrapes', () => {}, () => import('./src/commands/test_sql.js'))
-.alias('sql', 'sequentially')
 .command('in parallel', 'Test 100 times concurrently', () => {}, () => import('./src/commands/parallel.js'))
-.alias('concurrently', 'in parallel')
 .argv
