@@ -15,6 +15,7 @@ do {
     await webScrape(userInput)
 
     const end = performance.now()
+    
     const elapsedTime = end - start
     console.log('Elapsed time: ', elapsedTime, 'ms')
     avg.push(elapsedTime); n++

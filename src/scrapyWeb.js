@@ -68,5 +68,6 @@ export default async function webScrape(userInput) {
         exp: leveled_blocks.exp.at(-1) == '.' 
         ? leveled_blocks.exp.trim().slice(0, -1)
         : leveled_blocks.exp.trim()
-    }; return console.log(cambridge)
+    }; page.close() 
+    return console.log(cambridge)
 }
