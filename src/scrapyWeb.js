@@ -3,7 +3,7 @@ import { launch } from 'puppeteer'
 // web scrape your word data from Cambridge dictionary
 export default async function webScrape(userInput) {
     // headless browser 
-    const browser = await launch({ waitForInitialPage: false })
+    const browser = await launch({ waitForInitialPage: false, headless: false })
     const page = await browser.newPage()
 
     // request only HTML from the website
