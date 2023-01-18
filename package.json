@@ -1,6 +1,6 @@
 {
   "name": "cambricheame",
-  "version": "1.0.0",
+  "version": "1.0.0-test",
   "description": "Get the highest level entry of a word from the Cambridge dictionary",
   "main": "scrapyWeb.js",
   "type": "module",
