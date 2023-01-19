@@ -2,8 +2,10 @@ import { launch } from 'puppeteer'
 
 // web scrape your word data from Cambridge dictionary
 export default async function webScrape(userInput) {
+// SEQUENTIAL SIDE
+
     // headless browser 
-    const browser = await launch({ waitForInitialPage: false, headless: false })
+    const browser = await launch({ waitForInitialPage: false })
     const page = await browser.newPage()
 
     // request only HTML from the website
@@ -17,7 +19,19 @@ export default async function webScrape(userInput) {
     await page.goto(
         `https://dictionary.cambridge.org/dictionary/english/${userInput}`, 
         { waitUntil: 'domcontentloaded' }
-    ); let wrd 
+    ) 
+// END OF SEQUENTIAL SIDE
+
+// START THE PARTY ! ~ CONCURRENT SIDE ~
+
+    const [wrd, IPA, PoS, lvl, def, exp] = await Promise.all([
+        page.$eval('.dhw', word => word.textContent),
+        page.$eval('.us .dpron', ipa => ipa.textContent.replaceAll('/', '')),
+        page.$eval('.pos', pos => pos.textContent),
+        loopTilSpotLvl(),
+
+    ])
+    // , lvl = await loopTilStopLvl()
     
     try { wrd = await page.$eval('.dhw', wrd => wrd.textContent) }
     catch { 
@@ -26,15 +40,15 @@ export default async function webScrape(userInput) {
     }
 
     // scrape the highest english level of the word
-    let CEFR = ['C2', 'C1', 'B2', 'B1', 'A2', 'A1'], lvl = await loopTilStopLvl()
-    async function loopTilStopLvl(lvl = 0) {
-        if (lvl == 6) return ''
+    async function loopTilSpotLvl(lvl = 0) {
+        if (page.$('.dxref') == null) return ''
+        const CEFR = ['C2', 'C1', 'B2', 'B1', 'A2', 'A1']
         try { return await page.$eval(`.${CEFR[lvl]}`, level => level.textContent) } 
-        catch { return loopTilStopLvl(lvl + 1) }
+        catch { return loopTilSpotLvl(lvl + 1) }
     }
 
     // scrape the shortest definition & example of the word
-    CEFR = lvl == '' ? '.ddef_block:has(.db)' : `.ddef_block:has(.${lvl})` 
+    const CEFR = lvl == '' ? '.ddef_block:has(.db)' : `.ddef_block:has(.${lvl})` 
     const leveled_blocks = await page.$$eval(CEFR, blocks => {
         let shortest_def = blocks.reduce((a, b) => {
             return a.querySelector('.db').textContent.split(' ').length <= 
@@ -50,7 +64,7 @@ export default async function webScrape(userInput) {
             })
         } catch { shortest_exp = '' }
         
-        return shortest_def = {
+        return {
             def : shortest_def.querySelector('.db').textContent,
             exp : shortest_exp?.textContent || ''
         }
