@@ -12,9 +12,12 @@
 
 // console.log({docky, vane})
 
-function miau (arr = [1,2,3,4,5,6]) {
-    return arr
+
+function a(miau = 10) {
+    return function b(wow = 20){
+        return function c(){
+            return console.log( [miau, wow, miau + wow] )
+        }
+    }
 }
-
-
-console.log(miau()[0])
+a()()()

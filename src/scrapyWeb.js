@@ -24,31 +24,34 @@ export default async function webScrape(userInput) {
 
 // START THE PARTY ! ~ CONCURRENT SIDE ~
 
-    const [wrd, IPA, PoS, lvl, def, exp] = await Promise.all([
+    const [wrd, IPA, PoS, [lvl, def, exp]] = await Promise.all([
         page.$eval('.dhw', word => word.textContent),
         page.$eval('.us .dpron', ipa => ipa.textContent.replaceAll('/', '')),
         page.$eval('.pos', pos => pos.textContent),
-        loopTilSpotLvl(),
+        spot_lvl_def_exp(),
 
-    ])
-    // , lvl = await loopTilStopLvl()
-    
-    try { wrd = await page.$eval('.dhw', wrd => wrd.textContent) }
-    catch { 
+    ]).catch(() => {
         console.log(`\n${userInput} is not available in the Cambridge dictionary\n`) 
         process.exit()
-    }
+    })
+    
 
-    // scrape the highest english level of the word
-    async function loopTilSpotLvl(lvl = 0) {
-        if (page.$('.dxref') == null) return ''
-        const CEFR = ['C2', 'C1', 'B2', 'B1', 'A2', 'A1']
-        try { return await page.$eval(`.${CEFR[lvl]}`, level => level.textContent) } 
-        catch { return loopTilSpotLvl(lvl + 1) }
+    // SCRAPE HIGHEST LEVEL, THEN SHORTEST DEF, THEN SHORTEST EXP 
+    async function spot_lvl_def_exp(CEFR = ['C2', 'C1', 'B2', 'B1', 'A2', 'A1']) {
+        // Validates if word ever have level.
+        if ((await page.$('.dxref')) == null) return 'spotdef(.ddef_block:has(.db))'
+        if ((await page.$$('.dxref')).length == 1) return 'spotdef(.ddef_block:has(.${lvl}))'
+        
+        // If word have various def levels, choose the highest one.
+        return async function spot_highest_lvl(lvl = 0) {
+            try {
+                lvl = await page.$eval(`.${CEFR[lvl]}`, level => level.textContent) 
+                return spot_shortest_def(lvl)
+            } catch { return spot_highest_lvl(lvl + 1) }
+        }
     }
-
     // scrape the shortest definition & example of the word
-    const CEFR = lvl == '' ? '.ddef_block:has(.db)' : `.ddef_block:has(.${lvl})` 
+    CEFR = lvl == '' ? '.ddef_block:has(.db)' : `.ddef_block:has(.${lvl})` 
     const leveled_blocks = await page.$$eval(CEFR, blocks => {
         let shortest_def = blocks.reduce((a, b) => {
             return a.querySelector('.db').textContent.split(' ').length <= 
@@ -64,11 +67,13 @@ export default async function webScrape(userInput) {
             })
         } catch { shortest_exp = '' }
         
-        return {
-            def : shortest_def.querySelector('.db').textContent,
-            exp : shortest_exp?.textContent || ''
-        }
+        return [
+
+            shortest_def.querySelector('.db').textContent,
+            shortest_exp?.textContent || ''
+        ]
     })
+
 
     // address output
     const cambridge = {
