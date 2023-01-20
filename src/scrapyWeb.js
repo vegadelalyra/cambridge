@@ -58,33 +58,29 @@ export default async function webScrape(userInput) {
     // SCRAPING DEFINITION && EXAMPLE IN PARALLEL
         async function spot_shortest_def_exp(level) {
             // getting all blocks that matches the scraped level
-            const shortestBlock = await page.$$eval(level, blocks => {
-                // getting the block with the shortest def
-                let defEx = blocks.map( block => {
-                    let exs = block.querySelectorAll('.dexamp'), exsArr = []
-                    if (exs) for (let ex of exs) exsArr.push(ex.textContent)
+            const shortestBlock = await page.$$eval(level, async blocks => {
+                let defLengths = blocks.map(block => {
+                    return block.querySelector('.db').textContent.split(' ').length
+                }); const block = blocks[defLengths.indexOf(Math.min(...defLengths))]
 
-                    return {
-                        def: block.querySelector('.db').textContent,
-                        exp: exsArr.length > 1 ? exsArr : !exsArr[0] ? '' : exsArr[0]
-                    }
-                })
-                return defEx.reduce((a, b) => {
-                    return a.def.split(' ').length 
-                    <= b.def.split(' ').length ? a : b
-                })
+                const [ def, exp ] = await Promise.all([
+                    curatingDef(),
+                    curatingExp()
+                ]); return { def, exp }
+
+                function curatingDef () {
+                    let def = block.querySelector('.db').textContent
+                    return def.at(-1) == ' ' ? def.slice(0, -2) : def
+                }
+
+                function curatingExp () {
+                    let exp = Array.from(block.querySelectorAll('.dexamp'))
+                    .map(x => x.textContent)
+                    .reduce((a, b) => a.split(' ').length <= b.split(' ').length ? a : b)
+                    return exp.at(-1) == '.' ? exp.slice(0, -1) : exp 
+                }
             })
-            // getting shortest definition and example concurrently
-            const [def, exp] = await Promise.all([
-                shortestBlock.def.at(-1) == ' '
-                ? shortestBlock.def.slice(0, -2) 
-                : shortestBlock.def,
-                shortestBlock.exp instanceof Array 
-                ? shortestBlock.exp.reduce((a, b) => { 
-                    return a.split(' ').length <=
-                    b.split(' ').length ? a : b
-                }) : shortestBlock.exp
-            ]); return [lvl, def, exp.at(-1) == '.' ? exp.slice(0, -1) : exp]
+            return [lvl, shortestBlock.def, shortestBlock.exp]
         }
     }
 }
