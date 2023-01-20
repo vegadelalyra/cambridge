@@ -77,7 +77,7 @@ export default async function webScrape(userInput) {
                     let exp = Array.from(block.querySelectorAll('.dexamp'))
                     .map(x => x.textContent)
                     .reduce((a, b) => a.split(' ').length <= b.split(' ').length ? a : b)
-                    return exp.at(-1) == '.' ? exp.slice(0, -1) : exp 
+                    return exp.at(-1) == '.' ? exp.trim().slice(0, -1) : exp.trim() 
                 }
             })
             return [lvl, shortestBlock.def, shortestBlock.exp]
