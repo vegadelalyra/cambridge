@@ -74,7 +74,9 @@ export default async function webScrape(userInput) {
                 }
 
                 function curatingExp () {
-                    let exp = Array.from(block.querySelectorAll('.dexamp'))
+                    let guardClause = block.querySelectorAll('.dexamp')
+                    if (!guardClause.length) return '' 
+                    let exp = Array.from(guardClause)
                     .map(x => x.textContent)
                     .reduce((a, b) => a.split(' ').length <= b.split(' ').length ? a : b)
                     return exp.at(-1) == '.' ? exp.trim().slice(0, -1) : exp.trim() 
