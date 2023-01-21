@@ -11,8 +11,8 @@ export default async function webScrape(userInput) {
     // request only HTML from the website
     await page.setRequestInterception(true)
     page.on('request', (request) => {
-        if (request.resourceType() === 'document') request.continue()
-        else request.abort()
+        if (request.resourceType() !== 'document') request.abort()
+        else request.continue()
     })
 
     // navigate and scrape
