@@ -5,23 +5,25 @@ export default async function webScrape(userInput) {
 // SEQUENTIAL SIDE
 
     // headless browser 
-    const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true })
+    const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true, headless: false })
     const page = await browser.newPage()
 
     // request only HTML from the website
-    await page.setRequestInterception(true)
-    page.on('request', request => {
-        if (request.resourceType() !== 'document') request.abort()
-        else request.continue()
-    })
+    await Promise.all([ 
+        page.setRequestInterception(true),
+        page.on('request', request => {
+            if (request.resourceType() !== 'document') request.abort()
+            else request.continue()
+        })
+    ])
 
     // navigate and scrape
     await page.goto(
         `https://dictionary.cambridge.org/dictionary/english/${userInput}`, 
         { waitUntil: 'domcontentloaded' }
     ) 
-// END OF SEQUENTIAL SIDE
 
+// END OF SEQUENTIAL SIDE
 // START THE PARTY ! ~ CONCURRENT SIDE ~
     await Promise.all([
         page.$eval('.dhw', word => word.textContent),
@@ -31,6 +33,9 @@ export default async function webScrape(userInput) {
         spot_lvl_def_exp(),
     ]).then(async values => {
         browser.close()
+        await import('./cache/hashTable.js').then(enciclo => {
+            enciclo.pedia
+        })
         return console.log({
             word: values[0], 
             IPA : values[1],

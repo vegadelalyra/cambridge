@@ -7,11 +7,13 @@ if (userInput instanceof Array) userInput = userInput.join('-')
 if (!/^[a-zA-Z-]+$/.test(userInput)) {
     console.log('\nEnter a valid ENGLISH WORD or ENGLISH IDIOM\n') 
     process.exit()
-}
+}; const cache = await import('../cache/hashTable.js').then(enciclo => enciclo.pedia)
 
 // Time testing
 const start = performance.now()
-await Promise.all([webScrape(userInput)])
+!!cache[userInput] 
+? console.log(cache[userInput])
+: await Promise.all([webScrape(userInput)])
 const end = performance.now()
 
 const elapsedTime = end - start
