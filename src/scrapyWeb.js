@@ -10,7 +10,7 @@ export default async function webScrape(userInput) {
 
     // request only HTML from the website
     await page.setRequestInterception(true)
-    page.on('request', (request) => {
+    page.on('request', request => {
         if (request.resourceType() !== 'document') request.abort()
         else request.continue()
     })
@@ -23,15 +23,14 @@ export default async function webScrape(userInput) {
 // END OF SEQUENTIAL SIDE
 
 // START THE PARTY ! ~ CONCURRENT SIDE ~
-
     await Promise.all([
         page.$eval('.dhw', word => word.textContent),
         page.$eval('.us .dpron', ipa => ipa.textContent
         .replaceAll('/', '')).catch(() => ''),
         page.$eval('.pos', pos => pos.textContent),
         spot_lvl_def_exp(),
-    ]).then(values => {
-         browser.close()
+    ]).then(async values => {
+        browser.close()
         return console.log({
             word: values[0], 
             IPA : values[1],
