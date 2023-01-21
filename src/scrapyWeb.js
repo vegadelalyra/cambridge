@@ -6,6 +6,7 @@ export default async function webScrape(userInput) {
 
     // headless browser 
     const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true })
+
     const page = await browser.newPage()
 
     // request only HTML from the website
@@ -30,8 +31,8 @@ export default async function webScrape(userInput) {
         .replaceAll('/', '')).catch(() => ''),
         page.$eval('.pos', pos => pos.textContent),
         spot_lvl_def_exp(),
-    ]).then(async values => {
-        await browser.close()
+    ]).then(values => {
+         browser.close()
         return console.log({
             word: values[0], 
             IPA : values[1],
