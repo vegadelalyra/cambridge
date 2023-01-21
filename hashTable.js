@@ -1,2 +1,0 @@
-pedia.milk = {"wrd":"milk","IPA":"mɪlk","PoS":"noun","lvl":"A1","def":"the white liquid produced by cows, goats, and sheep and used by humans as a drink or for making butter, cheese, etc.","exp":"cow's/goat's milk"}
-pedia.milk = {"wrd":"milk","IPA":"mɪlk","PoS":"noun","lvl":"A1","def":"the white liquid produced by cows, goats, and sheep and used by humans as a drink or for making butter, cheese, etc.","exp":"cow's/goat's milk"}

@@ -11,8 +11,11 @@ if (!/^[a-zA-Z-]+$/.test(userInput)) {
 
 // Time testing
 const start = performance.now()
-!!cache[userInput] 
-? console.log(cache[userInput])
+!!cache[
+    userInput.includes('-') 
+    ? userInput = userInput.replaceAll('-', '') 
+    : userInput
+] ? console.log(cache[userInput])
 : await Promise.all([webScrape(userInput)])
 const end = performance.now()
 const elapsedTime = end - start

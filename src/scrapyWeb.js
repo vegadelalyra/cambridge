@@ -42,12 +42,13 @@ export default async function webScrape(userInput, test = false) {
             def : values[3][1],
             exp : values[3][2]
         }; console.log(cambridge)
+        if (test) return
+        userInput = userInput.replaceAll('-', '')
         cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
-        if (!test) fs.appendFileSync(
-            'src/cache/hashTable.js', 
-            cambridge, 
-            err => { if (err) throw err }
-        ) 
+        const fileUrl = new URL('./cache/hashTable.js', import.meta.url)
+        let filePath = new URL(fileUrl).pathname
+        if (filePath.includes('/C:/')) filePath = filePath.slice(3)
+        fs.appendFileSync(filePath, cambridge, err => { if (err) throw err }) 
     }).catch(() => console
     .log(`\n${userInput} is not available in the Cambridge dictionary\n`))
     
