@@ -6,7 +6,6 @@ export default async function webScrape(userInput) {
 
     // headless browser 
     const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true })
-
     const page = await browser.newPage()
 
     // request only HTML from the website
