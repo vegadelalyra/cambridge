@@ -40,8 +40,8 @@ export default async function webScrape(userInput) {
             def : values[3][1],
             exp : values[3][2]
         })
-    }).catch((e) => console
-    .log(e, `\n${userInput} is not available in the Cambridge dictionary\n`))
+    }).catch(() => console
+    .log(`\n${userInput} is not available in the Cambridge dictionary\n`))
     
     // SCRAPE HIGHEST LEVEL, THEN SHORTEST DEF, THEN SHORTEST EXP 
     async function spot_lvl_def_exp() {
