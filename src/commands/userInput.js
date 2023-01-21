@@ -11,8 +11,12 @@ const rl = readline.createInterface({
 export default async function() {
     return await new Promise(resolve => 
         rl.question(
-            '\x1b[93mPlease enter an ENGLISH WORD or ENGLISH IDIOM:\x1b[97m ', 
-            resolve
+            '\x1b[93mPlease enter an ENGLISH WORD or ENGLISH IDIOM:\x1b[97m ', answer => {
+                answer = answer.includes(' ') 
+                ? answer.replaceAll(' ', '-') 
+                : answer
+                resolve(answer)
+            }
         )
     )
 }

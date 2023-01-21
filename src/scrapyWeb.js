@@ -49,8 +49,8 @@ export default async function webScrape(userInput, test = false) {
         let filePath = new URL(fileUrl).pathname
         if (filePath.includes('/C:/')) filePath = filePath.slice(3)
         fs.appendFileSync(filePath, cambridge, err => { if (err) throw err }) 
-    }).catch(() => console
-    .log(`\n${userInput} is not available in the Cambridge dictionary\n`))
+    }).catch(e => console
+    .log(e, `\n${userInput} is not available in the Cambridge dictionary\n`))
     
     // SCRAPE HIGHEST LEVEL, THEN SHORTEST DEF, THEN SHORTEST EXP 
     async function spot_lvl_def_exp() {
