@@ -1,11 +1,12 @@
 import { launch } from 'puppeteer'
+import fs from 'fs'
 
 // web scrape your word data from Cambridge dictionary
-export default async function webScrape(userInput) {
+export default async function webScrape(userInput, test = false) {
 // SEQUENTIAL SIDE
 
     // headless browser 
-    const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true, headless: false })
+    const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true })
     const page = await browser.newPage()
 
     // request only HTML from the website
@@ -31,19 +32,21 @@ export default async function webScrape(userInput) {
         .replaceAll('/', '')).catch(() => ''),
         page.$eval('.pos', pos => pos.textContent),
         spot_lvl_def_exp(),
-    ]).then(async values => {
+    ]).then(values => {
         browser.close()
-        await import('./cache/hashTable.js').then(enciclo => {
-            enciclo.pedia
-        })
-        return console.log({
-            word: values[0], 
+        let cambridge = {
+            wrd: values[0], 
             IPA : values[1],
             PoS : values[2],
-            CEFR: values[3][0],
+            lvl : values[3][0],
             def : values[3][1],
             exp : values[3][2]
-        })
+        }; console.log(cambridge)
+        cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
+        if (!test) fs.appendFileSync(
+            'src/cache/hashTable.js', 
+            cambridge, 
+            err => { if (err) throw err }) 
     }).catch(() => console
     .log(`\n${userInput} is not available in the Cambridge dictionary\n`))
     

@@ -15,7 +15,8 @@ const start = performance.now()
 ? console.log(cache[userInput])
 : await Promise.all([webScrape(userInput)])
 const end = performance.now()
-
 const elapsedTime = end - start
-console.log('Word scraped from Cambridge dictionary in roughly', elapsedTime, 'ms')
-process.exit()
+console.log(
+    'Word scraped from Cambridge dictionary in roughly', 
+    Number(elapsedTime.toFixed()), 'ms'
+); process.exit()

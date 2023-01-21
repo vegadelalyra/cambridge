@@ -13,7 +13,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\index.js",
-            "args": ["be", "on", "cloud", "nine"]
+            "args": ["milk"]
         }
     ]
 }

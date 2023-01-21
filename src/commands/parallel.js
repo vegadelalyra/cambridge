@@ -10,7 +10,7 @@ console.log('\nEnter ONE valid ENGLISH WORD\n'); process.exit()
 const start = performance.now()
 const promises = Array(10).fill().map(async (_, i) => {
     const firstPromise = performance.now()
-    await webScrape(userInput)
+    await webScrape(userInput, true)
     const currentPromise = performance.now()
     const compensate = currentPromise - firstPromise
     const end = performance.now()
