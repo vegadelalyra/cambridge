@@ -26,7 +26,8 @@ export default async function webScrape(userInput) {
 
     await Promise.all([
         page.$eval('.dhw', word => word.textContent),
-        page.$eval('.us .dpron', ipa => ipa.textContent.replaceAll('/', '')),
+        page.$eval('.us .dpron', ipa => ipa.textContent
+        .replaceAll('/', '')).catch(() => ''),
         page.$eval('.pos', pos => pos.textContent),
         spot_lvl_def_exp(),
     ]).then(values => {
@@ -39,8 +40,8 @@ export default async function webScrape(userInput) {
             def : values[3][1],
             exp : values[3][2]
         })
-    }).catch(() => console
-    .log(`\n${userInput} is not available in the Cambridge dictionary\n`))
+    }).catch((e) => console
+    .log(e, `\n${userInput} is not available in the Cambridge dictionary\n`))
     
     // SCRAPE HIGHEST LEVEL, THEN SHORTEST DEF, THEN SHORTEST EXP 
     async function spot_lvl_def_exp() {
@@ -79,7 +80,11 @@ export default async function webScrape(userInput) {
                     let exp = Array.from(guardClause)
                     .map(x => x.textContent)
                     .reduce((a, b) => a.split(' ').length <= b.split(' ').length ? a : b)
-                    return exp.at(-1) == '.' ? exp.trim().slice(0, -1) : exp.trim() 
+                    .trim()
+                    
+                    if (exp.at(-1) == '.') exp = exp.slice(0, -1)
+                    if (exp.at(0) == '[') exp = exp.slice(6) 
+                    return exp 
                 }
             })
             return [lvl, shortestBlock.def, shortestBlock.exp]

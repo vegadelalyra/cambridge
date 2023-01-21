@@ -1,17 +1,17 @@
 import webScrape from "../scrapyWeb.js"
 
 // User input handler
-let userInput = process.argv.slice(2)[0]
+let userInput = process.argv.slice(2)
+userInput = userInput.join('-')
 if (!userInput) userInput = await import('./userInput.js').then(d => d.default())
-if (!/^[a-zA-Z]+$/.test(userInput)) {
-    console.log('\nEnter ONE valid ENGLISH WORD\n') 
+if (!/^[a-zA-Z-]+$/.test(userInput)) {
+    console.log('\nEnter a valid ENGLISH WORD or ENGLISH IDIOM\n') 
     process.exit()
 }
 
 // Time testing
 const start = performance.now()
-// Your code goes here
-await webScrape(userInput)
+await Promise.all([webScrape(userInput)])
 const end = performance.now()
 
 const elapsedTime = end - start

@@ -22,7 +22,7 @@ process.on('SIGINT', endOfTest)
 
 do {
     const start = performance.now()
-    await webScrape(userInput)
+    await Promise.all([webScrape(userInput)])
     const end = performance.now()
     
     const elapsedTime = end - start
