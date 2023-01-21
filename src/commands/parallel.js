@@ -17,6 +17,6 @@ const promises = Array(10).fill().map(async (_, i) => {
     const elapsedTime = end - start - compensate
     console.log(
         'Test', i + 1, 'Elapsed time', 
-        elapsedTime, 'ms'
+        Number(elapsedTime.toFixed()), 'ms'
     )
 }); await Promise.all(promises)

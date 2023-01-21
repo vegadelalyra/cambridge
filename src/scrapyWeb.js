@@ -46,7 +46,8 @@ export default async function webScrape(userInput, test = false) {
         if (!test) fs.appendFileSync(
             'src/cache/hashTable.js', 
             cambridge, 
-            err => { if (err) throw err }) 
+            err => { if (err) throw err }
+        ) 
     }).catch(() => console
     .log(`\n${userInput} is not available in the Cambridge dictionary\n`))
     

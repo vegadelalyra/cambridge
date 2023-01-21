@@ -28,7 +28,7 @@ do {
     const elapsedTime = end - start
     console.log(
         'Test n°', n + 1, 
-        'Elapsed time: ', elapsedTime, 'ms'
+        'Elapsed time: ', Number(elapsedTime.toFixed()), 'ms'
     ); avg.push(elapsedTime); n++
     if (n == 1000) break
 } while ( cap == '!' || n < cap )
