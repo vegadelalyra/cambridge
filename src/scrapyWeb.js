@@ -5,29 +5,36 @@ import fs from 'fs'
 export default async function webScrape(userInput, test = false) {
 // SEQUENTIAL SIDE
     // headless browser 
+    console.time('Opening browser')
     const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true })
     const page = await browser.newPage()
+    console.timeEnd('Opening browser')
 
+    console.time('Intercepting signals')
     // request only HTML from the website
-    page.setRequestInterception(true),
+    page.setRequestInterception(true)
     page.on('request', request => {
         if (request.resourceType() !== 'document') request.abort()
         else request.continue()
     })
+    console.timeEnd('Intercepting signals')
 
+    console.time('Going to link')
     // navigate and scrape
     await page.goto(
         `https://dictionary.cambridge.org/dictionary/english/${userInput}`, 
         { waitUntil: 'domcontentloaded' }
     ) 
+    console.timeEnd('Going to link')
 
 // END OF SEQUENTIAL SIDE
 // START THE PARTY ! ~ CONCURRENT SIDE ~
+    console.time('Scraping web in parallel')
     await Promise.all([
         page.evaluate(() => document.getElementsByClassName('dhw')[0].textContent),
         page.evaluate(() => document.getElementsByClassName('dpron')[0].textContent.replaceAll('/', '')).catch(() => ''),
         page.evaluate(() => document.getElementsByClassName('pos')[0].textContent),
-        spot_lvl_def_exp(),
+        spot_lvl_def_exp()
     ]).then(values => {
         browser.close()
         let cambridge = {
@@ -38,6 +45,7 @@ export default async function webScrape(userInput, test = false) {
             def : values[3][1],
             exp : values[3][2]
         }; console.log(cambridge)
+        console.timeEnd('Scraping web in parallel')
         if (test) return
         userInput = userInput.replaceAll('-', '')
         cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
