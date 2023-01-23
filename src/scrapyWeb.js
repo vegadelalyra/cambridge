@@ -4,19 +4,16 @@ import fs from 'fs'
 // web scrape your word data from Cambridge dictionary
 export default async function webScrape(userInput, test = false) {
 // SEQUENTIAL SIDE
-
     // headless browser 
     const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true })
     const page = await browser.newPage()
 
     // request only HTML from the website
-    await Promise.all([ 
-        page.setRequestInterception(true),
-        page.on('request', request => {
-            if (request.resourceType() !== 'document') request.abort()
-            else request.continue()
-        })
-    ])
+    page.setRequestInterception(true),
+    page.on('request', request => {
+        if (request.resourceType() !== 'document') request.abort()
+        else request.continue()
+    })
 
     // navigate and scrape
     await page.goto(
@@ -27,10 +24,9 @@ export default async function webScrape(userInput, test = false) {
 // END OF SEQUENTIAL SIDE
 // START THE PARTY ! ~ CONCURRENT SIDE ~
     await Promise.all([
-        page.$eval('.dhw', word => word.textContent),
-        page.$eval('.us .dpron', ipa => ipa.textContent
-        .replaceAll('/', '')).catch(() => ''),
-        page.$eval('.pos', pos => pos.textContent),
+        page.evaluate(() => document.getElementsByClassName('dhw')[0].textContent),
+        page.evaluate(() => document.getElementsByClassName('dpron')[0].textContent.replaceAll('/', '')).catch(() => ''),
+        page.evaluate(() => document.getElementsByClassName('pos')[0].textContent),
         spot_lvl_def_exp(),
     ]).then(values => {
         browser.close()
@@ -50,7 +46,8 @@ export default async function webScrape(userInput, test = false) {
         if (filePath.includes('/C:/')) filePath = filePath.slice(3)
         try { fs.appendFileSync(filePath, cambridge) 
         } catch { fs.appendFileSync('./src/cache/hashTable.js', cambridge) }
-    }).catch(() => console.log(`\n${userInput} is not available in the Cambridge dictionary\n`))
+    }).catch(() => console
+    .log(`\n\x1b[97m${userInput}\x1b[97m is not available in the Cambridge dictionary\n`))
     
     // SCRAPE HIGHEST LEVEL, THEN SHORTEST DEF, THEN SHORTEST EXP 
     async function spot_lvl_def_exp() {
