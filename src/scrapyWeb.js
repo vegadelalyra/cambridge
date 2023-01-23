@@ -6,12 +6,44 @@ export default async function webScrape(userInput, test = false) {
 // SEQUENTIAL SIDE
     // headless browser 
     console.time('Opening browser')
-    const browser = await launch({ waitForInitialPage: false, ignoreHTTPSErrors: true })
-    const page = await browser.newPage()
+    const browser = await launch({
+        waitForInitialPage: false,
+        ignoreHTTPSErrors: true,
+        args: [
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-setuid-sandbox',
+            '--disable-background-networking',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-breakpad',
+            '--disable-client-side-phishing-detection',
+            '--disable-default-apps',
+            '--disable-dev-shm-usage',
+            '--disable-hang-monitor',
+            '--disable-ipc-flooding-protection',
+            '--disable-popup-blocking',
+            '--disable-prompt-on-repost',
+            '--disable-renderer-backgrounding',
+            '--disable-sync',
+            '--disable-translate',
+            '--disable-web-security',
+            '--disable-accelerated-2d-canvas',
+            '--disable-extensions',
+            '--remote-debugging-port=9222',
+            '--remote-debugging-address=0.0.0.0',
+        ]
+    })
+
     console.timeEnd('Opening browser')
+    console.time('opening new page')
+    let page = await browser.pages()
+    page = page[0]
+    console.timeEnd('opening new page')
 
     console.time('Intercepting signals')
     // request only HTML from the website
+    // page.setDefaultTimeout(700)
     page.setRequestInterception(true)
     page.on('request', request => {
         if (request.resourceType() !== 'document') request.abort()
@@ -35,8 +67,8 @@ export default async function webScrape(userInput, test = false) {
         page.evaluate(() => document.getElementsByClassName('dpron')[0].textContent.replaceAll('/', '')).catch(() => ''),
         page.evaluate(() => document.getElementsByClassName('pos')[0].textContent),
         spot_lvl_def_exp()
-    ]).then(values => {
-        browser.close()
+    ]).then(async values => {
+        await browser.close()
         let cambridge = {
             wrd: values[0], 
             IPA : values[1],
@@ -44,7 +76,8 @@ export default async function webScrape(userInput, test = false) {
             lvl : values[3][0],
             def : values[3][1],
             exp : values[3][2]
-        }; console.log(cambridge)
+        }; 
+        console.log(cambridge)
         console.timeEnd('Scraping web in parallel')
         if (test) return
         userInput = userInput.replaceAll('-', '')
