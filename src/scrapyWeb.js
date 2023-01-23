@@ -9,7 +9,7 @@ export default async function webScrape(userInput, test = false) {
     const browser = await launch({
         waitForInitialPage: false,
         ignoreHTTPSErrors: true,
-        args: [
+        ignoreDefaultArgs: [
             '--no-sandbox',
             '--disable-dev-shm-usage',
             '--disable-setuid-sandbox',
@@ -43,7 +43,6 @@ export default async function webScrape(userInput, test = false) {
 
     console.time('Intercepting signals')
     // request only HTML from the website
-    // page.setDefaultTimeout(700)
     page.setRequestInterception(true)
     page.on('request', request => {
         if (request.resourceType() !== 'document') request.abort()
@@ -56,7 +55,7 @@ export default async function webScrape(userInput, test = false) {
     await page.goto(
         `https://dictionary.cambridge.org/dictionary/english/${userInput}`, 
         { waitUntil: 'domcontentloaded' }
-    ) 
+    ); browser.close()
     console.timeEnd('Going to link')
 
 // END OF SEQUENTIAL SIDE
@@ -67,8 +66,7 @@ export default async function webScrape(userInput, test = false) {
         page.evaluate(() => document.getElementsByClassName('dpron')[0].textContent.replaceAll('/', '')).catch(() => ''),
         page.evaluate(() => document.getElementsByClassName('pos')[0].textContent),
         spot_lvl_def_exp()
-    ]).then(async values => {
-        await browser.close()
+    ]).then(values => {
         let cambridge = {
             wrd: values[0], 
             IPA : values[1],
