@@ -10,10 +10,19 @@ export default async function webScrape(userInput, test = false) {
     // retrieve all the desired data with high-level selectors in parallel
     const [wrd, [ipa, PoS, lvl, def, exp]] = await Promise.all([
         $('#cald4-1+ .dpos-h .dpos-h_hw').text(), // word, phrase or idiom name
-        assBigFnThatScrapesAll()
-    ])
+        ScrapingCambridge()
+    ]).catch(() => console.log(userInput, 'is not available in the Cambridge dictionary')) 
+    
+    console.log({
+        word : wrd, 
+        IPA  : ipa, 
+        PoS  : PoS, 
+        lvl  : lvl, 
+        def  : def, 
+        exp  : exp
+    })
 
-    function assBigFnThatScrapesAll(){
+    function ScrapingCambridge(){
         let CEFR = $('.dxref')
         CEFR = !!CEFR.length 
         ? CEFR.text().match(/.{1,2}/g).sort().at(-1)
@@ -25,10 +34,19 @@ export default async function webScrape(userInput, test = false) {
         .map( function() { return {
             def: $(this).find('.def').text(), 
             exp: $(this).find('.dexamp')
-                .toArray().map(x => $(x).text())
+                .toArray().map(x => $(x).text()),
+            the: $(this).closest('.pos-body').prev()
+            .map( function() { return {
+                ipa: $(this).find('.us .dpron').text(),
+                pos: $(this).find('.dpos').text()
+            }}).toArray()[0]
         }}).toArray().reduce((a, b) => 
         a.def.split(' ').length <=
         b.def.split(' ').length ? a : b)
+
+        // Spot out the IPA and PoS of top level definition
+        let ipa = topBlock.the.ipa.slice(1, -1)
+        let pos = topBlock.the.pos
 
         // Top level shortest definition
         let def = topBlock.def
@@ -46,16 +64,6 @@ export default async function webScrape(userInput, test = false) {
         ? exp.slice(0, -1)
         : exp.trim()
 
-        console.log(topBlock)
-        return [1,2, CEFR, def, exp]        
+        return [ipa, pos, CEFR, def, exp]        // VICTORY!!!
     }
-
-    console.log({
-        word: wrd,
-        IPA: ipa,
-        PoS: PoS,
-        lvl: lvl,
-        def: def,
-        exp: exp
-    })
 }
