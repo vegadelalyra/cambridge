@@ -48,8 +48,7 @@ export default async function webScrape(userInput, test = false) {
         // Spot out the IPA and PoS of top level definition
             topBlock.the?.ipa.slice(1, -1) ?? '',
             topBlock.the?.pos ?? '',
-            getDf(),
-            getEx()
+            getDf(), getEx()
         ])
         // Top level shortest definition
         function getDf() {
