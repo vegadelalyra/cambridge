@@ -6,12 +6,23 @@ export default async function webScrape(userInput, test = false) {
     // send the HTTP get request with axios library, parse the data with cheerio
     const url = `https://dictionary.cambridge.org/dictionary/english/${userInput}`
     const res = await axios.get(url), $ = load(res.data)
+    const wordPromise = new Promise((resolve, reject) => {
+        try {
+            const word = $('.dpos-h_hw:first')
+            if (!word.length) throw new Error('miau')
+            resolve(word.text());
+        } catch {}
+    })
 
     // retrieve all the desired data with high-level selectors in parallel
     const [wrd, [ipa, PoS, lvl, def, exp]] = await Promise.all([
-        $('.dpos-h_hw:first').text(), // word, phrase or idiom name
-        ScrapingCambridge()
-    ]).catch(() => console.log(userInput, 'is not available in the Cambridge dictionary')) 
+        wordPromise,
+        ScrapingCambridge() // ipa, pos, lvl, def, exp
+    ]).catch(() => {
+         console.log('\n', userInput, 
+         '\x1b[93mis not available in the Cambridge dictionary\n\x1b[37m')
+        process.exit()
+    }) 
     
     console.log({
         word : wrd, 
