@@ -5,14 +5,15 @@ import { load } from 'cheerio'
 export default async function webScrape(userInput, test = false) {
     // send the HTTP get request with axios library, parse the data with cheerio
     const url = `https://dictionary.cambridge.org/dictionary/english/${userInput}`
-    const res = await axios.get(url, {
-        'Accept-Encoding': 'gzip,deflate',
-    }); const $ = load(res.data)
+    const res = await axios.get(url)
+    let $ = load(res.data)
+    let page = $('#page-content').html()
+    $ = load(page)
 
     // retrieve all the desired data with high-level selectors in parallel
     const [wrd, ipa, PoS, lvl, def, exp] = await Promise.all([
         $('#cald4-1+ .dpos-h .dpos-h_hw').text(), // word, phrase or idiom name
-        $('<dsv<weg>').text(), // IPA of the highest level
+        $('.us .lpl-1').text(), // IPA of the highest level
         $('.pos').first().text(), // Position of Speech of the highest level
         $('.A2').first().text(), // highest available CEFR (Common European Framework Reference) level
         $('.db').first().text(), // shortest definition with the highest CEFR level if any
