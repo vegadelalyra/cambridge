@@ -9,7 +9,7 @@ export default async function webScrape(userInput, test = false) {
 
     // retrieve all the desired data with high-level selectors in parallel
     const [wrd, [ipa, PoS, lvl, def, exp]] = await Promise.all([
-        $('#cald4-1+ .dpos-h .dpos-h_hw').text(), // word, phrase or idiom name
+        $('.dpos-h_hw:first').text(), // word, phrase or idiom name
         ScrapingCambridge()
     ]).catch(() => console.log(userInput, 'is not available in the Cambridge dictionary')) 
     
@@ -35,18 +35,18 @@ export default async function webScrape(userInput, test = false) {
             def: $(this).find('.def').text(), 
             exp: $(this).find('.dexamp')
                 .toArray().map(x => $(x).text()),
-            the: $(this).closest('.pos-body').prev()
+            the: $(this).parent().parent().parent().prev()
             .map( function() { return {
                 ipa: $(this).find('.us .dpron').text(),
-                pos: $(this).find('.dpos').text()
+                pos: $(this).find('.dpos:first').text()
             }}).toArray()[0]
         }}).toArray().reduce((a, b) => 
         a.def.split(' ').length <=
         b.def.split(' ').length ? a : b)
 
         // Spot out the IPA and PoS of top level definition
-        let ipa = topBlock.the.ipa.slice(1, -1)
-        let pos = topBlock.the.pos
+        let ipa = topBlock.the?.ipa.slice(1, -1) ?? '' 
+        let pos = topBlock.the?.pos ?? ''
 
         // Top level shortest definition
         let def = topBlock.def
