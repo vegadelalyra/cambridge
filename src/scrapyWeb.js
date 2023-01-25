@@ -21,8 +21,13 @@ export default async function webScrape(userInput, test = false) {
 
     // Cache handler
     if (test) return // disabled on test environment
-    cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge)
-    fs.writeFileSync('./cache/hashTable.js', cambridge, 'utf8')
+    userInput = userInput.replaceAll('-', '')
+    cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
+    const fileUrl = new URL('./cache/hashTable.js', import.meta.url)
+    let filePath = new URL(fileUrl).pathname
+    if (filePath.includes('/C:/')) filePath = filePath.slice(3)
+    try { fs.appendFileSync(filePath, cambridge) 
+    } catch { fs.appendFileSync('./src/cache/hashTable.js', cambridge) }
     
     async function ScrapingCambridge(){
         let CEFR = $('.dxref')
