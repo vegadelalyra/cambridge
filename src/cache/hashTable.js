@@ -6,3 +6,4 @@ pedia.profiler = {"wrd":"profiler","IPA":"ˈproʊ.faɪ.lɚ","PoS":"noun","lvl":"
 pedia.length = {"wrd":"length","IPA":"leŋθ","PoS":"noun","lvl":"C2","def":"for a long time","exp":""}
 pedia.attired = {"wrd":"attired","IPA":"əˈtaɪəd","PoS":"adjective","lvl":"","def":"dressed in clothes of a particular type","exp":"She was attired from head to foot in black"}
 pedia.milk = {"wrd":"milk","IPA":"mɪlk","PoS":"noun","lvl":"A1","def":"the white liquid produced by cows, goats, and sheep and used by humans as a drink or for making butter, cheese, etc.","exp":"cow's/goat's milk"}
+pedia.lessen = {"word":"lessen","IPA":"ˈles.ən","PoS":"verb","lvl":"C1","def":"If something lessens or is lessened, it becomes less strong","exp":"A healthy diet can lessen the risk of heart disease"}
