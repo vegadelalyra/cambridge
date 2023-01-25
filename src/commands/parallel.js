@@ -7,16 +7,8 @@ if (!/^[a-zA-Z]+$/.test(userInput)) {
 console.log('\nEnter ONE valid ENGLISH WORD\n'); process.exit()
 } 
 
-const start = performance.now()
 const promises = Array(10).fill().map(async (_, i) => {
-    const firstPromise = performance.now()
+    console.time(`Concurrence n°${i}`)
     await webScrape(userInput, true)
-    const currentPromise = performance.now()
-    const compensate = currentPromise - firstPromise
-    const end = performance.now()
-    const elapsedTime = end - start - compensate
-    console.log(
-        'Test', i + 1, 'Elapsed time', 
-        Number(elapsedTime.toFixed()), 'ms'
-    )
+    console.timeEnd(`Concurrence n°${i}`)
 }); await Promise.all(promises)
