@@ -29,6 +29,7 @@ export default async function webScrape(userInput, test = false) {
     try { fs.appendFileSync(filePath, cambridge) 
     } catch { fs.appendFileSync('./src/cache/hashTable.js', cambridge) }
     
+    // My finest scrapy web function!
     async function ScrapingCambridge(){
         let CEFR = $('.dxref')
         CEFR = !CEFR.length ? '' 
