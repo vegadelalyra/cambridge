@@ -44,7 +44,9 @@ export default async function webScrape(userInput, test = false) {
                 .toArray().map(x => $(x).text()),
             the: $(this).parents().eq(2).prev()
             .map( function() { return {
-                ipa: $(this).find('.us .dpron, .uk .dpron').text(),
+                ipa: !!$(this).has('.us .dpron').length 
+                ? $(this).find('.us .dpron').text()
+                : $(this).find('.uk .dpron').text(),
                 pos: $(this).find('.dpos:first').text()
             }}).toArray()[0]
         }}).toArray().reduce((a, b) => 
