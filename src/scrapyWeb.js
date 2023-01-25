@@ -4,43 +4,9 @@ import fs from 'fs'
 
 // web scrape your word data from Cambridge dictionary
 export default async function webScrape(userInput, test = false) {
-<<<<<<< HEAD
-// SEQUENTIAL SIDE
-    // headless browser 
-    console.time('Opening browser')
-    const browser = await launch({
-        waitForInitialPage: false,
-        ignoreHTTPSErrors: true,
-        ignoreDefaultArgs: [
-            '--no-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-setuid-sandbox',
-            '--disable-background-networking',
-            '--disable-background-timer-throttling',
-            '--disable-backgrounding-occluded-windows',
-            '--disable-breakpad',
-            '--disable-client-side-phishing-detection',
-            '--disable-default-apps',
-            '--disable-dev-shm-usage',
-            '--disable-hang-monitor',
-            '--disable-ipc-flooding-protection',
-            '--disable-popup-blocking',
-            '--disable-prompt-on-repost',
-            '--disable-renderer-backgrounding',
-            '--disable-sync',
-            '--disable-translate',
-            '--disable-web-security',
-            '--disable-accelerated-2d-canvas',
-            '--disable-extensions',
-            '--remote-debugging-port=9222',
-            '--remote-debugging-address=0.0.0.0',
-        ]
-    })
-=======
     // send the HTTP get request with axios library, parse the data with cheerio
     const url = `https://dictionary.cambridge.org/dictionary/english/${userInput}`
     const res = await axios.get(url), $ = load(res.data)
->>>>>>> cheerioAxios
 
     // retrieve all the desired data with high-level selectors in parallel
     const [wrd, [ipa, PoS, lvl, def, exp]] = await Promise.all([
@@ -53,54 +19,6 @@ export default async function webScrape(userInput, test = false) {
     }); let cambridge = { word:wrd, IPA:ipa, PoS:PoS, lvl:lvl, def:def, exp:exp } 
     console.log(cambridge)
 
-<<<<<<< HEAD
-    console.time('Intercepting signals')
-    // request only HTML from the website
-    page.setRequestInterception(true)
-    page.on('request', request => {
-        if (request.resourceType() !== 'document') request.abort()
-        else request.continue()
-    })
-    console.timeEnd('Intercepting signals')
-
-    console.time('Going to link')
-    // navigate and scrape
-    await page.goto(
-        `https://dictionary.cambridge.org/dictionary/english/${userInput}`, 
-        { waitUntil: 'domcontentloaded' }
-    ); browser.close()
-    console.timeEnd('Going to link')
-
-// END OF SEQUENTIAL SIDE
-// START THE PARTY ! ~ CONCURRENT SIDE ~
-    console.time('Scraping web in parallel')
-    await Promise.all([
-        page.evaluate(() => document.getElementsByClassName('dhw')[0].textContent),
-        page.evaluate(() => document.getElementsByClassName('dpron')[0].textContent.replaceAll('/', '')).catch(() => ''),
-        page.evaluate(() => document.getElementsByClassName('pos')[0].textContent),
-        spot_lvl_def_exp()
-    ]).then(values => {
-        let cambridge = {
-            wrd: values[0], 
-            IPA : values[1],
-            PoS : values[2],
-            lvl : values[3][0],
-            def : values[3][1],
-            exp : values[3][2]
-        }; 
-        console.log(cambridge)
-        console.timeEnd('Scraping web in parallel')
-        if (test) return
-        userInput = userInput.replaceAll('-', '')
-        cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
-        const fileUrl = new URL('./cache/hashTable.js', import.meta.url)
-        let filePath = new URL(fileUrl).pathname
-        if (filePath.includes('/C:/')) filePath = filePath.slice(3)
-        try { fs.appendFileSync(filePath, cambridge) 
-        } catch { fs.appendFileSync('./src/cache/hashTable.js', cambridge) }
-    }).catch(() => console
-    .log(`\n\x1b[97m${userInput}\x1b[97m is not available in the Cambridge dictionary\n`))
-=======
     // Cache handler
     if (test) return // disabled on test environment
     userInput = userInput.replaceAll('-', '')
@@ -110,7 +28,6 @@ export default async function webScrape(userInput, test = false) {
     if (filePath.includes('/C:/')) filePath = filePath.slice(3)
     try { fs.appendFileSync(filePath, cambridge) 
     } catch { fs.appendFileSync('./src/cache/hashTable.js', cambridge) }
->>>>>>> cheerioAxios
     
     // My finest scrapy web function!
     async function ScrapingCambridge(){
