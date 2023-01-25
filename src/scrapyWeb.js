@@ -1,38 +1,29 @@
 import axios from 'axios'
 import { load } from 'cheerio'
+import fs from 'fs'
 
 // web scrape your word data from Cambridge dictionary
 export default async function webScrape(userInput, test = false) {
     // send the HTTP get request with axios library, parse the data with cheerio
     const url = `https://dictionary.cambridge.org/dictionary/english/${userInput}`
     const res = await axios.get(url), $ = load(res.data)
-    const wordPromise = new Promise((resolve, reject) => {
-        try {
-            const word = $('.dpos-h_hw:first')
-            if (!word.length) throw new Error('miau')
-            resolve(word.text());
-        } catch {}
-    })
 
     // retrieve all the desired data with high-level selectors in parallel
     const [wrd, [ipa, PoS, lvl, def, exp]] = await Promise.all([
-        wordPromise,
-        ScrapingCambridge() // ipa, pos, lvl, def, exp
-    ]).catch(() => {
+        $('.dpos-h_hw:first').text(), // word, idiom or phrase name
+        ScrapingCambridge() // scrape ipa, pos, lvl, def, exp
+    ]).catch(() => { // if any scrape matched, then alert user and exit app
          console.log('\n', userInput, 
          '\x1b[93mis not available in the Cambridge dictionary\n\x1b[37m')
         process.exit()
-    }) 
-    
-    console.log({
-        word : wrd, 
-        IPA  : ipa, 
-        PoS  : PoS, 
-        lvl  : lvl, 
-        def  : def, 
-        exp  : exp
-    })
+    }); let cambridge = { word:wrd, IPA:ipa, PoS:PoS, lvl:lvl, def:def, exp:exp } 
+    console.log(cambridge)
 
+    // Cache handler
+    if (test) return // disabled on test environment
+    cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge)
+    fs.writeFileSync('./cache/hashTable.js', cambridge, 'utf8')
+    
     async function ScrapingCambridge(){
         let CEFR = $('.dxref')
         CEFR = !CEFR.length ? '' 
