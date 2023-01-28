@@ -29,8 +29,7 @@ export default async function webScrape(userInput, test = false) {
     let filePath = new URL(fileUrl).pathname
     if (filePath.includes('/C:/')) filePath = filePath.slice(3)
     try { fs.appendFileSync(fileUrl.href, cambridge)
-    } catch { fs.appendFileSync(fileUrl.pathname, cambridge) }
-    
+    } catch (e) { console.error(e) }
     // My finest scrapy web function!
     async function ScrapingCambridge(){
         let CEFR = $('.dxref')
