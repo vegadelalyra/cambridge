@@ -24,7 +24,7 @@ export default async function webScrape(userInput, test = false) {
     if (test) return // disabled on test environment
     userInput = userInput.replaceAll('-', '')
     cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
-    const hashTablePath = path.join(__dirname, '../cache/hashTable.js')
+    const hashTablePath = path.resolve(__dirname, '..', 'cache', 'hashTable.js').replace(/\\/g,path.sep)
     try { fs.appendFileSync(hashTablePath, cambridge)
     } catch (e) { console.error(e) }
     
