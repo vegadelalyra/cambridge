@@ -26,7 +26,6 @@ export default async function webScrape(userInput, test = false) {
     cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
     const fileUrl = new URL('./cache/hashTable.js', import.meta.url)
     let filePath = new URL(fileUrl).pathname
-    const fU = path(import.meta.url)
     if (filePath.includes('/C:/')) filePath = filePath.slice(3)
     try { fs.appendFileSync(fileUrl.href, cambridge)
     } catch { fs.appendFileSync('/src/cache/hashTable.js', cambridge) }
