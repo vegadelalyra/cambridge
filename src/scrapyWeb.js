@@ -25,10 +25,11 @@ export default async function webScrape(userInput, test = false) {
     userInput = userInput.replaceAll('-', '')
     cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
     const fileUrl = new URL('./cache/hashTable.js', import.meta.url)
+    console.log(fileUrl)
     let filePath = new URL(fileUrl).pathname
     if (filePath.includes('/C:/')) filePath = filePath.slice(3)
     try { fs.appendFileSync(fileUrl.href, cambridge)
-    } catch { fs.appendFileSync('/src/cache/hashTable.js', cambridge) }
+    } catch { fs.appendFileSync(fileUrl.pathname, cambridge) }
     
     // My finest scrapy web function!
     async function ScrapingCambridge(){
