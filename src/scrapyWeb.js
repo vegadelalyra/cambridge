@@ -28,7 +28,7 @@ export default async function webScrape(userInput, test = false) {
     console.log(fileUrl)
     let filePath = new URL(fileUrl).pathname
     if (filePath.includes('/C:/')) filePath = filePath.slice(3)
-    try { fs.appendFileSync(fileUrl.pathname, cambridge)
+    try { fs.appendFileSync('../cache/hashTable.js', cambridge)
     } catch (e) { console.error(e) }
     // My finest scrapy web function!
     async function ScrapingCambridge(){
