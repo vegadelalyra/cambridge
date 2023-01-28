@@ -25,8 +25,9 @@ export default async function webScrape(userInput, test = false) {
     userInput = userInput.replaceAll('-', '')
     cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
     console.log(process.cwd())
-    // try { fs.appendFileSync(hashTablePath, cambridge)
-    // } catch (e) { console.error(e) }
+    const hashTablePath = path.join(process.cwd(), 'cache', 'hashTable.js');
+    try { fs.appendFileSync(hashTablePath, cambridge)
+    } catch (e) { console.error(e) }
     
     // My finest scrapy web function!
     async function ScrapingCambridge(){
