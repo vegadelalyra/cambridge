@@ -24,10 +24,9 @@ export default async function webScrape(userInput, test = false) {
     if (test) return // disabled on test environment
     userInput = userInput.replaceAll('-', '')
     cambridge = `pedia.${userInput} = ` + JSON.stringify(cambridge) + '\n'
-    const hashTablePath = path.resolve(__dirname, '..', 'cache', 'hashTable.js').replace(/\\/g,path.sep)
-    console.log(process.cwd());
-    try { fs.appendFileSync(hashTablePath, cambridge)
-    } catch (e) { console.error(e) }
+    console.log(process.cwd())
+    // try { fs.appendFileSync(hashTablePath, cambridge)
+    // } catch (e) { console.error(e) }
     
     // My finest scrapy web function!
     async function ScrapingCambridge(){
