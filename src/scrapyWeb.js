@@ -26,7 +26,7 @@ export default async function webScrape(userInput, test = false) {
     const fileUrl = new URL('./cache/hashTable.js', import.meta.url)
     let filePath = new URL(fileUrl).pathname
     if (filePath.includes('/C:/')) filePath = filePath.slice(3)
-    try { fs.appendFileSync(filePath, cambridge) 
+    try { fs.appendFileSync(fileUrl.pathname, cambridge); console.log(fileUrl.pathname);
     } catch { fs.appendFileSync('./src/cache/hashTable.js', cambridge) }
     
     // My finest scrapy web function!
