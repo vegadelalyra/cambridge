@@ -62,7 +62,9 @@ export default async function webScrape(userInput, test = false) {
         // Top level shortest definition
         function getDf() {
             let def = topBlock.def
-            if (def.includes('\n')) def.replaceAll('\n', '')
+            if (def.includes('\n')) def = def
+            .replaceAll('\n', '').trim()
+            def = def.replace(/\s+/g, ' ')
             return def = def.at(-2) == ':' 
             ? def.slice(0, -2)
             : def.trim()
