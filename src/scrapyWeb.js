@@ -12,11 +12,8 @@ export default async function webScrape(userInput, test = false) {
     const [wrd, [ipa, PoS, lvl, def, exp]] = await Promise.all([
         $('.dpos-h_hw:first').text(), // word, idiom or phrase name
         ScrapingCambridge() // scrape ipa, pos, lvl, def, exp
-    ]).catch(() => { // if any scrape matched, then alert user and exit app
-         console.log('\n', userInput, 
-         '\x1b[93mis not available in the Cambridge dictionary\n\x1b[37m')
-        process.exit()
-    }); let cambridge = { word:wrd, IPA:ipa, PoS:PoS, lvl:lvl, def:def, exp:exp } 
+    ]) 
+    let cambridge = { word:wrd, IPA:ipa, PoS:PoS, lvl:lvl, def:def, exp:exp } 
     console.log(cambridge)
 
     // Cache handler
