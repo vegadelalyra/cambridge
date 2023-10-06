@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { load } from 'cheerio'
 import fs from 'fs'
-import path from 'path'
 
 // web scrape your word data from Cambridge dictionary
 export default async function webScrape(userInput, test = false) {
