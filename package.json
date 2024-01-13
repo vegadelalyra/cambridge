@@ -1,6 +1,6 @@
 {
   "name": "cambricheame",
-  "version": "1.3.2",
+  "version": "2.0.0",
   "description": "Get the highest level entry of a word from the Cambridge dictionary",
   "main": "index.js",
   "type": "module",
