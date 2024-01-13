@@ -5,3 +5,5 @@ pedia.bottle = {"word":"bottle","IPA":"ˈbɑː.t̬əl","PoS":"noun","lvl":"A2","
 pedia.cat = {"word":"cat","IPA":"kæt","PoS":"noun","lvl":"A1","def":"a small animal with fur, four legs, a tail, and claws, usually kept as a pet or for catching mice","exp":""}
 pedia.cat = {"word":"cat","IPA":"kæt","PoS":"noun","lvl":"A1","def":"a small animal with fur, four legs, a tail, and claws, usually kept as a pet or for catching mice","exp":""}
 pedia.sky = {"word":"sky","IPA":"skaɪ","PoS":"noun","lvl":"A2","def":"the area above the earth, in which clouds, the sun, etc. can be seen","exp":"a blue/cloudy/dark sky"}
+pedia.tingle = {"word":"tingle","IPA":"ˈtɪŋ·ɡəl","PoS":"verb","lvl":"","def":"to have a slight stinging feeling","exp":"Her skin tingled after swimming in the cold, salty water"}
+pedia.well = {"word":"well","IPA":"wel","PoS":"adverb","lvl":"C1","def":"used to emphasize some prepositions","exp":" It cost well over £100"}
