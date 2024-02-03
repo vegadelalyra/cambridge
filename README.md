@@ -1,6 +1,9 @@
 # cambricheame
 Look up the most advanced definition of a word in the Cambridge dictionary.
 
+![imagen](https://github.com/vegadelalyra/cambridge/assets/77188420/9faae686-45b0-46a4-bd6e-e6cd862bc2e2)
+
+
 ## Install
 
 ```npm
