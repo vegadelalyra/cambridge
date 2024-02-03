@@ -37,7 +37,6 @@ async function scrapeUserInput(waitForInput = false) {
   } catch (error) {
     // if none scrape matched, then alert user and exit app
     console.log(
-      error,
       '\n',
       userInput,
       '\x1b[93mis not available in the Cambridge dictionary\n\x1b[37m'
